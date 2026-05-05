@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
-dotenv.config();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// Siempre busca backend/.env independientemente del process.cwd()
+dotenv.config({ path: join(__dirname, "../../.env") });
 
 export const env = {
   port: Number(process.env.PORT || 4000),

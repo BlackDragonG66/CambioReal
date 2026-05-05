@@ -11,7 +11,8 @@ import rewardsRoutes from "./routes/rewards.js";
 import profileRoutes from "./routes/profile.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const FRONTEND_DIR = join(__dirname, "../../frontend");
+// FRONTEND_DIR puede sobreescribirse con variable de entorno desde el panel de Hostinger
+const FRONTEND_DIR = process.env.FRONTEND_DIR || join(__dirname, "../../frontend");
 
 const app = express();
 
