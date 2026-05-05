@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { env } from "./config/env.js";
@@ -11,16 +12,34 @@ import rewardsRoutes from "./routes/rewards.js";
 import profileRoutes from "./routes/profile.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// FRONTEND_DIR puede sobreescribirse con variable de entorno desde el panel de Hostinger
-const FRONTEND_DIR = process.env.FRONTEND_DIR || join(__dirname, "../../frontend");
+
+// Busca el frontend en varias ubicaciones posibles según el entorno
+const FRONTEND_CANDIDATES = [
+  process.env.FRONTEND_DIR,               // variable de entorno (prioridad máxima)
+  join(__dirname, "../frontend"),          // nodejs/frontend/  ← Hostinger (frontend dentro del app root)
+  join(__dirname, "../../frontend"),       // repo raíz/frontend ← local XAMPP
+  join(__dirname, "../../public_html"),    // public_html de Hostinger como último recurso
+].filter(Boolean);
+
+const FRONTEND_DIR = FRONTEND_CANDIDATES.find(p => existsSync(p));
+
+if (!FRONTEND_DIR) {
+  console.error("⚠️  Frontend no encontrado. Rutas probadas:", FRONTEND_CANDIDATES);
+  console.error("   Sube la carpeta frontend/ a nodejs/frontend/ en el File Manager de Hostinger");
+  console.error("   O configura la variable de entorno FRONTEND_DIR en el panel de Hostinger");
+} else {
+  console.log(`📁 Frontend cargado desde: ${FRONTEND_DIR}`);
+}
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Servir archivos estáticos del frontend
-app.use(express.static(FRONTEND_DIR));
+// Servir archivos estáticos del frontend (solo si se encontró la carpeta)
+if (FRONTEND_DIR) {
+  app.use(express.static(FRONTEND_DIR));
+}
 
 // Rutas API
 app.use("/api/auth", authRoutes);
@@ -36,6 +55,9 @@ app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/")) {
     return res.status(404).json({ error: "Ruta no encontrada" });
+  }
+  if (!FRONTEND_DIR) {
+    return res.status(503).send("Frontend no configurado. Revisa los logs del servidor.");
   }
   res.sendFile(join(FRONTEND_DIR, "index.html"));
 });
