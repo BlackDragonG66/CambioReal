@@ -1,5 +1,8 @@
 // Configuración del API base
-const API_BASE = "http://localhost:4000/api";
+// En producción usa la misma URL del sitio; en local apunta al puerto 4000
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:4000/api"
+  : `${window.location.origin}/api`;
 
 function getToken() {
   return localStorage.getItem("rd_token");

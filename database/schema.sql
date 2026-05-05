@@ -2,11 +2,12 @@
 -- Reto Diario - Esquema de base de datos V1
 -- ========================================
 
-CREATE DATABASE IF NOT EXISTS reto_diario
+-- Base de datos de producción: u450340862_cambio
+CREATE DATABASE IF NOT EXISTS u450340862_cambio
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE reto_diario;
+USE u450340862_cambio;
 
 -- Usuarios
 CREATE TABLE IF NOT EXISTS users (
