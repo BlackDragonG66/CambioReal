@@ -1,0 +1,246 @@
+/* ============================================================
+   Reto Diario — Estilos globales
+   ============================================================ */
+
+:root {
+  --bg:        #0f172a;
+  --surface:   #1e293b;
+  --surface2:  #334155;
+  --accent:    #6366f1;
+  --accent2:   #8b5cf6;
+  --success:   #22c55e;
+  --warning:   #f59e0b;
+  --danger:    #ef4444;
+  --text:      #f1f5f9;
+  --text-muted:#94a3b8;
+  --radius:    14px;
+  --font:      'Inter', system-ui, sans-serif;
+
+  /* Colores por categoría */
+  --cat-salud:    #22c55e;
+  --cat-trabajo:  #6366f1;
+  --cat-casa:     #f59e0b;
+  --cat-estudio:  #3b82f6;
+  --cat-pareja:   #ec4899;
+  --cat-familia:  #f97316;
+  --cat-dinero:   #14b8a6;
+  --cat-habitos:  #8b5cf6;
+  --cat-diversion:#eab308;
+  --cat-personal: #64748b;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Layout ---- */
+#app { flex: 1; display: flex; flex-direction: column; max-width: 480px; margin: 0 auto; width: 100%; }
+
+/* ---- Páginas ---- */
+.page { display: none; flex-direction: column; flex: 1; padding: 0 0 80px; }
+.page.active { display: flex; }
+
+/* ---- Barra de navegación ---- */
+.nav-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: var(--surface);
+  display: flex; justify-content: space-around;
+  padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--surface2);
+  z-index: 100;
+}
+.nav-bar button {
+  background: none; border: none; color: var(--text-muted);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; font-size: 10px; cursor: pointer; padding: 4px 12px;
+  border-radius: 8px; transition: color .2s;
+}
+.nav-bar button.active,
+.nav-bar button:hover { color: var(--accent); }
+.nav-bar button svg { width: 22px; height: 22px; }
+
+/* ---- Header ---- */
+.page-header { padding: 20px 20px 0; display: flex; align-items: center; gap: 10px; }
+.page-header h1 { font-size: 22px; font-weight: 700; }
+.page-header p  { color: var(--text-muted); font-size: 14px; }
+
+/* ---- Tarjetas ---- */
+.card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 16px; margin: 12px 20px 0;
+}
+.card-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+.card-value { font-size: 28px; font-weight: 700; }
+
+/* ---- Botones ---- */
+.btn {
+  border: none; border-radius: 10px; cursor: pointer;
+  font-size: 15px; font-weight: 600; padding: 13px 20px;
+  transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn-primary  { background: var(--accent); color: #fff; }
+.btn-success  { background: var(--success); color: #fff; }
+.btn-danger   { background: var(--danger); color: #fff; }
+.btn-ghost    { background: var(--surface2); color: var(--text); }
+.btn-full     { width: 100%; display: block; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+
+/* ---- Formularios ---- */
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-group label { font-size: 13px; color: var(--text-muted); }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--surface2); border: 1px solid transparent;
+  border-radius: 10px; color: var(--text);
+  font-size: 15px; padding: 11px 14px;
+  outline: none; transition: border-color .2s;
+  width: 100%;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--accent); }
+.form-group textarea { resize: vertical; min-height: 70px; }
+
+/* ---- Login / Registro ---- */
+#page-auth {
+  justify-content: center; padding: 30px 24px;
+  min-height: 100dvh;
+}
+.auth-logo { text-align: center; margin-bottom: 30px; }
+.auth-logo h1 { font-size: 32px; color: var(--accent); }
+.auth-logo p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+.auth-tabs { display: flex; background: var(--surface2); border-radius: 10px; margin-bottom: 24px; }
+.auth-tab {
+  flex: 1; text-align: center; padding: 10px; cursor: pointer;
+  border-radius: 10px; font-weight: 600; font-size: 14px;
+  color: var(--text-muted); transition: background .2s, color .2s;
+}
+.auth-tab.active { background: var(--accent); color: #fff; }
+
+/* ---- Actividades ---- */
+.activity-card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 14px 16px; margin: 10px 20px 0;
+  display: flex; align-items: center; gap: 12px;
+  border-left: 4px solid var(--accent);
+}
+.activity-card.completed { opacity: .5; }
+.activity-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.activity-info { flex: 1; }
+.activity-info h3 { font-size: 15px; font-weight: 600; }
+.activity-info small { font-size: 12px; color: var(--text-muted); }
+.activity-pts { font-size: 13px; font-weight: 700; color: var(--accent); margin-right: 6px; }
+.btn-check {
+  background: none; border: 2px solid var(--surface2); border-radius: 50%;
+  width: 28px; height: 28px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background .15s, border-color .15s;
+}
+.btn-check.done { background: var(--success); border-color: var(--success); }
+
+/* ---- Barra de progreso ---- */
+.progress-bar { background: var(--surface2); border-radius: 99px; height: 8px; margin: 6px 0; }
+.progress-fill { background: linear-gradient(90deg,var(--accent),var(--accent2)); border-radius: 99px; height: 100%; transition: width .5s; }
+
+/* ---- Recompensas ---- */
+.reward-card {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 16px; margin: 10px 20px 0; position: relative;
+}
+.reward-card.locked { opacity: .55; }
+.reward-pts { font-size: 13px; color: var(--warning); font-weight: 700; }
+
+/* ---- Calendario ---- */
+#calendar-grid { padding: 12px 20px 0; }
+
+/* ---- Toasts ---- */
+#toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 999; display: flex; flex-direction: column; gap: 8px; width: 340px; max-width: calc(100vw - 32px); }
+.toast {
+  background: var(--surface2); border-radius: 10px; padding: 12px 16px;
+  font-size: 14px; box-shadow: 0 4px 20px #0007;
+  animation: slideIn .3s ease; border-left: 4px solid var(--accent);
+}
+.toast.success { border-color: var(--success); }
+.toast.error   { border-color: var(--danger); }
+@keyframes slideIn { from { opacity:0; transform: translateY(-12px); } to { opacity:1; transform: translateY(0); } }
+
+/* ---- Spinner ---- */
+.spinner { width: 22px; height: 22px; border: 3px solid var(--surface2); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; margin: 40px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Scroll ---- */
+.scroll-area { overflow-y: auto; flex: 1; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 99px; }
+
+/* ---- FAB ---- */
+.fab {
+  position: fixed; bottom: 90px; right: calc(50% - 240px + 20px);
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 50%; width: 54px; height: 54px;
+  font-size: 26px; cursor: pointer; box-shadow: 0 4px 18px #6366f155;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99; transition: transform .15s;
+}
+.fab:active { transform: scale(.92); }
+@media (max-width: 520px) { .fab { right: 20px; } }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed; inset: 0; background: #000a; z-index: 200;
+  display: none; align-items: flex-end; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: var(--radius) var(--radius) 0 0;
+  padding: 24px; width: 100%; max-width: 480px;
+  max-height: 90dvh; overflow-y: auto;
+  animation: slideUp .25s ease;
+}
+@keyframes slideUp { from { transform: translateY(40px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.modal-header h2 { font-size: 18px; font-weight: 700; }
+.modal-close { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+
+/* ---- Racha ---- */
+.streak-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--warning); color: #000; border-radius: 99px; padding: 3px 10px; font-size: 13px; font-weight: 700; }
+
+/* ---- Categoría chips ---- */
+.chip { display: inline-block; border-radius: 99px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+
+/* Colores por categoría en tarjetas */
+.cat-salud    { border-color: var(--cat-salud) !important; }
+.cat-trabajo  { border-color: var(--cat-trabajo) !important; }
+.cat-casa     { border-color: var(--cat-casa) !important; }
+.cat-estudio  { border-color: var(--cat-estudio) !important; }
+.cat-pareja   { border-color: var(--cat-pareja) !important; }
+.cat-familia  { border-color: var(--cat-familia) !important; }
+.cat-dinero   { border-color: var(--cat-dinero) !important; }
+.cat-habitos  { border-color: var(--cat-habitos) !important; }
+.cat-diversion{ border-color: var(--cat-diversion) !important; }
+.cat-personal { border-color: var(--cat-personal) !important; }
+
+.dot-salud    { background: var(--cat-salud); }
+.dot-trabajo  { background: var(--cat-trabajo); }
+.dot-casa     { background: var(--cat-casa); }
+.dot-estudio  { background: var(--cat-estudio); }
+.dot-pareja   { background: var(--cat-pareja); }
+.dot-familia  { background: var(--cat-familia); }
+.dot-dinero   { background: var(--cat-dinero); }
+.dot-habitos  { background: var(--cat-habitos); }
+.dot-diversion{ background: var(--cat-diversion); }
+.dot-personal { background: var(--cat-personal); }
+
+/* ---- Empty state ---- */
+.empty { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+.empty span { font-size: 40px; display: block; margin-bottom: 8px; }

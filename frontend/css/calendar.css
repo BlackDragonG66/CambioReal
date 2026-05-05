@@ -1,0 +1,19 @@
+/* Pequeñas utilidades del calendario propio */
+.cal-nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 0; }
+.cal-nav h2 { font-size: 17px; font-weight: 700; }
+.cal-nav button { background: var(--surface2); border: none; color: var(--text); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 16px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; padding: 10px 20px; }
+.cal-day-name { text-align: center; font-size: 11px; color: var(--text-muted); padding: 4px 0; }
+.cal-day {
+  aspect-ratio: 1; border-radius: 10px; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start; padding: 5px 2px 3px;
+  font-size: 13px; cursor: pointer; position: relative; transition: background .15s;
+}
+.cal-day:hover { background: var(--surface2); }
+.cal-day.today { background: var(--accent); color: #fff; font-weight: 700; }
+.cal-day.selected { background: var(--surface2); outline: 2px solid var(--accent); }
+.cal-day.empty { cursor: default; }
+.cal-dots { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 2px; }
+.cal-dot { width: 5px; height: 5px; border-radius: 50%; }
+.cal-day-activities { padding: 12px 20px; overflow-y: auto; flex: 1; }
+.cal-day-activities h3 { font-size: 14px; color: var(--text-muted); margin-bottom: 8px; }

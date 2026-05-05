@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#6366f1" />
+  <meta name="description" content="Convierte tus actividades en puntos y tus puntos en recompensas" />
+
+  <title>Reto Diario</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/calendar.css" />
+</head>
+<body>
+
+<!-- ===================== TOASTS ===================== -->
+<div id="toast-container" role="alert" aria-live="polite"></div>
+
+<!-- ===================== APP ======================== -->
+<div id="app">
+
+  <!-- ─── LOGIN / REGISTRO ─── -->
+  <section id="page-auth" class="page active">
+    <div class="auth-logo">
+      <h1>🎯 Reto Diario</h1>
+      <p>Convierte actividades en logros</p>
+    </div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" data-tab="login">Iniciar sesión</div>
+      <div class="auth-tab" data-tab="register">Crear cuenta</div>
+    </div>
+
+    <!-- Login -->
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-email">Correo electrónico</label>
+        <input id="login-email" type="email" placeholder="tu@correo.com" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+    </form>
+
+    <!-- Registro -->
+    <form id="register-form" style="display:none">
+      <div class="form-group">
+        <label for="reg-name">Nombre</label>
+        <input id="reg-name" type="text" placeholder="Tu nombre" autocomplete="name" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Correo electrónico</label>
+        <input id="reg-email" type="email" placeholder="tu@correo.com" autocomplete="email" required />
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Contraseña (mín. 8 caracteres)</label>
+        <input id="reg-password" type="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Crear cuenta</button>
+    </form>
+  </section>
+
+  <!-- ─── DASHBOARD ─── -->
+  <section id="page-dashboard" class="page scroll-area">
+    <div class="page-header">
+      <div>
+        <h1 id="dash-greeting">Hola</h1>
+        <p>Aquí están tus actividades de hoy</p>
+      </div>
+    </div>
+
+    <!-- Tarjetas de resumen -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-top:16px;">
+      <div class="card">
+        <div class="card-title">Puntos disponibles</div>
+        <div class="card-value" id="dash-points-today">—</div>
+      </div>
+      <div class="card" style="justify-content:center;display:flex;flex-direction:column">
+        <div class="card-title">Próxima recompensa</div>
+        <p id="dash-next-reward" style="font-size:12px;color:var(--accent);margin-top:4px">—</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" id="dash-progress-text">Cargando…</div>
+      <div class="progress-bar" style="margin-top:8px">
+        <div class="progress-fill" id="dash-progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Lista de actividades del día -->
+    <div id="dash-activity-list" style="padding-bottom:8px"></div>
+  </section>
+
+  <!-- ─── CALENDARIO ─── -->
+  <section id="page-calendar" class="page">
+    <div class="cal-nav">
+      <button id="cal-prev" aria-label="Mes anterior">‹</button>
+      <h2 id="cal-month-label"></h2>
+      <button id="cal-next" aria-label="Mes siguiente">›</button>
+    </div>
+    <div id="cal-grid" class="cal-grid"></div>
+    <div id="cal-day-activities" class="cal-day-activities scroll-area"></div>
+  </section>
+
+  <!-- ─── RECOMPENSAS ─── -->
+  <section id="page-rewards" class="page scroll-area">
+    <div class="page-header" style="justify-content:space-between">
+      <div>
+        <h1>Recompensas</h1>
+        <p id="rewards-balance">…</p>
+      </div>
+      <button id="open-modal-reward" class="btn btn-primary" style="padding:10px 14px">+ Nueva</button>
+    </div>
+    <div id="rewards-list" style="padding-bottom:16px"></div>
+  </section>
+
+  <!-- ─── PERFIL ─── -->
+  <section id="page-profile" class="page scroll-area">
+    <div class="page-header"><h1>Perfil</h1></div>
+    <div id="profile-content"></div>
+  </section>
+
+  <!-- ─── NAVEGACIÓN ─── -->
+  <nav id="main-nav" class="nav-bar" style="display:none">
+    <button data-page="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Inicio
+    </button>
+    <button data-page="calendar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Calendario
+    </button>
+    <button data-page="rewards">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Premios
+    </button>
+    <button data-page="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg>
+      Perfil
+    </button>
+  </nav>
+
+  <!-- ─── FAB ─── -->
+  <button class="fab" aria-label="Nueva actividad" style="display:none">+</button>
+
+</div><!-- /app -->
+
+<!-- ===================== MODAL ACTIVIDAD ===================== -->
+<div id="modal-activity" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nueva actividad</h2>
+      <button id="close-modal-activity" class="modal-close" aria-label="Cerrar">×</button>
+    </div>
+    <form id="activity-form">
+      <div class="form-group">
+        <label for="act-title">Nombre *</label>
+        <input id="act-title" type="text" placeholder="Ej: Hacer ejercicio" required />
+      </div>
+      <div class="form-group">
+        <label for="act-desc">Descripción</label>
+        <textarea id="act-desc" placeholder="Opcional…"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label for="act-date">Fecha *</label>
+          <input id="act-date" type="date" required />
+        </div>
+        <div class="form-group">
+          <label for="act-time">Hora</label>
+          <input id="act-time" type="time" />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label for="act-points">Puntos *</label>
+          <select id="act-points">
+            <option value="5">5 — Fácil</option>
+            <option value="10" selected>10 — Normal</option>
+            <option value="20">20 — Importante</option>
+            <option value="50">50 — Difícil</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="act-category">Categoría</label>
+          <select id="act-category">
+            <option value="personal">Personal</option>
+            <option value="salud">Salud</option>
+            <option value="trabajo">Trabajo</option>
+            <option value="casa">Casa</option>
+            <option value="estudio">Estudio</option>
+            <option value="pareja">Pareja</option>
+            <option value="familia">Familia</option>
+            <option value="dinero">Dinero</option>
+            <option value="habitos">Hábitos</option>
+            <option value="diversion">Diversión</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label for="act-repeat">Repetición</label>
+          <select id="act-repeat">
+            <option value="none">Sin repetir</option>
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+            <option value="monthly">Mensual</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="act-reminder">Recordatorio</label>
+          <select id="act-reminder">
+            <option value="">Sin recordatorio</option>
+            <option value="10">10 min antes</option>
+            <option value="30">30 min antes</option>
+            <option value="60">1 hora antes</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:4px">Guardar actividad</button>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL RECOMPENSA ===================== -->
+<div id="modal-reward" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nueva recompensa</h2>
+      <button id="close-modal-reward" class="modal-close" aria-label="Cerrar">×</button>
+    </div>
+    <form id="reward-form">
+      <div class="form-group">
+        <label for="rw-title">Nombre *</label>
+        <input id="rw-title" type="text" placeholder="Ej: Ir al cine" required />
+      </div>
+      <div class="form-group">
+        <label for="rw-desc">Descripción</label>
+        <textarea id="rw-desc" placeholder="Opcional…"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="rw-points">Costo en puntos *</label>
+        <input id="rw-points" type="number" min="1" placeholder="Ej: 200" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-full">Guardar recompensa</button>
+    </form>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
